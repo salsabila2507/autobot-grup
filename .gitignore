@@ -1,0 +1,36 @@
+# --- secrets: never commit any of these ---
+.env
+.env.*
+!.env.example
+*.session
+*.session-journal
+/root/.secrets/
+.secrets/
+
+# live configuration (holds real api_id, api_hash, group ids, admin ids)
+config.yaml
+config.local.yaml
+
+# runtime state
+data/
+logs/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+queryid_cache.json
+
+# downloaded browser (hundreds of MB)
+.playwright/
+
+# python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/

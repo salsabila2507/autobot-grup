@@ -1,0 +1,19 @@
+[Unit]
+Description=HOTTI queue bot (numbering, deletes, cards, buttons, reactions)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/bot-eg/hotti
+Environment=HOTTI_CONFIG=/home/ubuntu/bot-eg/hotti/config.yaml
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/ubuntu/bot-eg/hotti/venv/bin/python -m services.queue_bot
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

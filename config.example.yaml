@@ -1,0 +1,69 @@
+# HOTTI Engine - example configuration.
+#
+# Copy to config.yaml and edit. NO SECRETS IN THIS FILE.
+# Secrets live in ${HOTTI_SECRETS}/ with chmod 600, referenced by path only.
+
+app:
+  api_id: 0            # from my.telegram.org
+  api_hash: "REPLACE_ME"
+
+groups:
+  - key: hotti
+    main_group: -1003946784525   # placeholder
+    mod_group: 0            # Phase 0, filled by the owner                  # Phase 0, filled by the owner
+    admin_user_ids: []            # Phase 0, filled by the owner            # Phase 0, filled by the owner
+    mod_bot_username: MissRose_bot
+    topics:
+      prison: 16                  # public warnings live here, no new topic
+      warnings: 16
+      weak_reply: 17
+      rules: 18
+    circles:
+      - key: eng_blue
+        topic_id: 4
+        kind: engagement
+        required: 30
+        entry_format: slash       # slash | two_line
+        max_drops_per_round: 0    # VIP cap comes from rules.vip_drops_per_24h
+      # Likes circle: the posted link is rewritten to x.com/intent/like?tweet_id=<id>
+      # so members like straight from the queue. Tweet ID is still required.
+      - key: like20
+        topic_id: 6
+        kind: likes
+        required: 20
+        entry_format: slash
+        max_drops_per_round: 0
+
+rules:
+  obligation_required: 30          # engagements owed before a regular member may drop again
+  vip_drops_per_24h: 4             # VIP skip the obligation gate, capped rolling 24h
+  miss_threshold: 2                # missing this many required links raises a case
+  grace_minutes: 15                # no scoring before drop time + grace
+  enforce_deadline_minutes: 15     # list_then_auto: card age before the ladder fires
+  like_sla_minutes: 10
+  public_warnings: true            # warnings posted in PRISON AREA topic 16
+  warn_ladder: {1: "4h", 2: "48h", 3: "7d"}
+  max_warnings: 3                  # then admin discretion for a ban
+
+rounds:
+  mode: fixed                      # fixed clock rounds, never gap based
+  schedule_utc: ["06:00-18:00", "18:00-06:00"]
+
+enforcement:
+  mode: list_only                  # list_only | list_then_auto | auto
+  native_fallback: false
+
+secrets:
+  queue_bot_token_file: ${HOTTI_SECRETS}/hotti_queue_bot_token.txt
+  userbot_session_file: ${HOTTI_SECRETS}/hotti_userbot_string.txt
+  cookie_dir: ${HOTTI_SECRETS}/x_cookies
+
+x_reader:
+  # Replies are read through a real browser. The GraphQL API rejects our read-only
+  # accounts (401), and X hides part of every thread unless replies are sorted Recent.
+  cookie_file: ${HOTTI_SECRETS}/x_cookies/header_acct02.txt
+  sample_size: 2                   # random links checked per member
+  confirm_sample: true             # a "violated" sample is confirmed with a second one
+  browser_max_scrolls: 60          # hard bound; a run still ends early once the thread stops moving
+  browser_idle_rounds: 4           # idle rounds before a read counts as complete
+  browser_pause: 1.0
